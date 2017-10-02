@@ -24,12 +24,30 @@ namespace IdentityServer4.Endpoints.Results
         public string Error { get; set; }
 
         /// <summary>
+        /// Gets or sets the error description.
+        /// </summary>
+        /// <value>
+        /// The error description.
+        /// </value>
+        public string Error_Description { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TokenRevocationErrorResult"/> class.
         /// </summary>
         /// <param name="error">The error.</param>
         public TokenRevocationErrorResult(string error)
         {
             Error = error;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TokenRevocationErrorResult"/> class.
+        /// </summary>
+        /// <param name="error">The error.</param>
+        /// <param name="errorDescription">The error description.</param>
+        public TokenRevocationErrorResult(string error, string errorDescription) : this(error)
+        {
+            Error_Description = errorDescription;
         }
 
         /// <summary>
@@ -40,7 +58,7 @@ namespace IdentityServer4.Endpoints.Results
         public Task ExecuteAsync(HttpContext context)
         {
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-            return context.Response.WriteJsonAsync(new { error = Error });
+            return context.Response.WriteJsonAsync(new { error = Error, error_description = Error_Description });
         }
     }
 }

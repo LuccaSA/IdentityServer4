@@ -113,11 +113,13 @@ namespace IdentityServer4.Endpoints
             else
             {
                 _logger.LogInformation("No matching token found");
+                await _events.RaiseAsync(new TokenRevokedFailureEvent(requestValidationResult, requestValidationResult.Client));
+                return new TokenRevocationErrorResult("token_not_found", "No matching token found");
             }
 
             if (response.Error.IsPresent()) return new TokenRevocationErrorResult(response.Error);
 
-            return new StatusCodeResult(HttpStatusCode.OK);
+            return new TokenRevocationResult("000", "OK");
         }
     }
 }

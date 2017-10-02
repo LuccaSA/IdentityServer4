@@ -31,6 +31,7 @@ namespace IdentityServer4.Events
         public const int TokenIssuedFailure = TokenEventsStart + 1;
 
         public const int TokenRevokedSuccess = TokenEventsStart + 10;
+        public const int TokenRevokedFailure = TokenEventsStart + 11;
 
         public const int TokenIntrospectionSuccess = TokenEventsStart + 20;
         public const int TokenIntrospectionFailure = TokenEventsStart + 21;
