@@ -60,19 +60,21 @@ namespace IdentityServer4.Events
             ClientId = request.ValidatedRequest.Client.ClientId;
             ClientName = request.ValidatedRequest.Client.ClientName;
             Endpoint = EndpointNames.Token;
-            SubjectId = request.ValidatedRequest.Subject?.GetSubjectId();
             GrantType = request.ValidatedRequest.GrantType;
 
             if (GrantType == OidcConstants.GrantTypes.RefreshToken)
             {
+                SubjectId = request.ValidatedRequest.RefreshToken.Subject?.GetSubjectId();
                 Scopes = request.ValidatedRequest.RefreshToken.AccessToken.Scopes.ToSpaceSeparatedString();
             }
             else if (GrantType == OidcConstants.GrantTypes.AuthorizationCode)
             {
+                SubjectId = request.ValidatedRequest.AuthorizationCode.Subject?.GetSubjectId();
                 Scopes = request.ValidatedRequest.AuthorizationCode.RequestedScopes.ToSpaceSeparatedString();
             }
             else
             {
+                SubjectId = request.ValidatedRequest.Subject?.GetSubjectId();
                 Scopes = request.ValidatedRequest.ValidatedScopes?.GrantedResources.ToScopeNames().ToSpaceSeparatedString();
             }
 
