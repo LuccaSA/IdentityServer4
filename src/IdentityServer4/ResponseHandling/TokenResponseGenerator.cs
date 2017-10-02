@@ -191,7 +191,7 @@ namespace IdentityServer4.ResponseHandling
 
             if (request.AuthorizationCode != null)
             {
-                createRefreshToken = request.AuthorizationCode.RequestedScopes.Contains(IdentityServerConstants.StandardScopes.OfflineAccess);
+                createRefreshToken = true;//request.AuthorizationCode.RequestedScopes.Contains(IdentityServerConstants.StandardScopes.OfflineAccess);
 
                 // load the client that belongs to the authorization code
                 Client client = null;
