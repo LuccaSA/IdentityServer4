@@ -195,18 +195,19 @@ namespace IdentityServer4
 
         public static class ProtocolRoutePaths
         {
-            public const string Authorize              = "connect/authorize";
+            public const string BaseUri                = "provider/oauth";
+            public const string Authorize              = BaseUri + "/authorize";
             public const string AuthorizeAfterConsent  = Authorize + "/consent";
             public const string AuthorizeAfterLogin    = Authorize + "/login";
             public const string DiscoveryConfiguration = ".well-known/openid-configuration";
             public const string DiscoveryWebKeys       = DiscoveryConfiguration + "/jwks";
-            public const string Token                  = "connect/token";
-            public const string Revocation             = "connect/revocation";
-            public const string UserInfo               = "connect/userinfo";
-            public const string Introspection          = "connect/introspect";
-            public const string EndSession             = "connect/endsession";
+            public const string Token                  = BaseUri + "/token";
+            public const string Revocation             = BaseUri + "/revoke";
+            public const string UserInfo               = BaseUri + "/userinfo";
+            public const string Introspection          = BaseUri + "/introspect";
+            public const string EndSession             = BaseUri + "/endsession";
             public const string EndSessionCallback     = EndSession + "/callback";
-            public const string CheckSession           = "connect/checksession";
+            public const string CheckSession           = BaseUri + "/checksession";
             
             public static readonly string[] CorsPaths =
             {
