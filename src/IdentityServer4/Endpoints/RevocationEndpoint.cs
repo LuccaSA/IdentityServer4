@@ -142,9 +142,11 @@ namespace IdentityServer4.Endpoints
             else
             {
                 _logger.LogInformation("No matching token found");
+                await _events.RaiseAsync(new TokenRevokedFailureEvent(requestResult, client));
+                return new RevocationErrorResult("token_not_found", "No matching token found");
             }
 
-            return new StatusCodeResult(HttpStatusCode.OK);
+            return new TokenRevocationResult("000", "OK");
         }
 
         // revoke access token only if it belongs to client doing the request
