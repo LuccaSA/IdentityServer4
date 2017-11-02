@@ -1,14 +1,16 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using IdentityModel;
 using IdentityServer4.Extensions;
+using IdentityServer4.Hosting;
 using IdentityServer4.Models;
-using IdentityServer4.ResponseHandling;
 using IdentityServer4.Validation;
 using System.Collections.Generic;
-using static IdentityServer4.Constants;
+using System.Linq;
+using System.Security.Claims;
 
 namespace IdentityServer4.Events
 {
@@ -28,10 +30,11 @@ namespace IdentityServer4.Events
             ClientId = response.Request.ClientId;
             ClientName = response.Request.Client.ClientName;
             RedirectUri = response.RedirectUri;
-            Endpoint = EndpointNames.Authorize;
+            Endpoint = EndpointName.Authorize.ToString();
             SubjectId = response.Request.Subject.GetSubjectId();
             Scopes = response.Scope;
             GrantType = response.Request.GrantType;
+            SubjectEmail = response.Request.Subject.Claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)?.Value;
 
             var tokens = new List<Token>();
             if (response.IdentityToken != null)
@@ -59,22 +62,25 @@ namespace IdentityServer4.Events
         {
             ClientId = request.ValidatedRequest.Client.ClientId;
             ClientName = request.ValidatedRequest.Client.ClientName;
-            Endpoint = EndpointNames.Token;
+            Endpoint = EndpointName.Token.ToString();
             GrantType = request.ValidatedRequest.GrantType;
 
             if (GrantType == OidcConstants.GrantTypes.RefreshToken)
             {
                 SubjectId = request.ValidatedRequest.RefreshToken.Subject?.GetSubjectId();
+                SubjectEmail = request.ValidatedRequest.RefreshToken.Subject?.Claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)?.Value;
                 Scopes = request.ValidatedRequest.RefreshToken.AccessToken.Scopes.ToSpaceSeparatedString();
             }
             else if (GrantType == OidcConstants.GrantTypes.AuthorizationCode)
             {
                 SubjectId = request.ValidatedRequest.AuthorizationCode.Subject?.GetSubjectId();
+                SubjectEmail = request.ValidatedRequest.AuthorizationCode.Subject?.Claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)?.Value;
                 Scopes = request.ValidatedRequest.AuthorizationCode.RequestedScopes.ToSpaceSeparatedString();
             }
             else
             {
                 SubjectId = request.ValidatedRequest.Subject?.GetSubjectId();
+                SubjectEmail = request.ValidatedRequest.Subject?.Claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)?.Value;
                 Scopes = request.ValidatedRequest.ValidatedScopes?.GrantedResources.ToScopeNames().ToSpaceSeparatedString();
             }
 
@@ -144,6 +150,14 @@ namespace IdentityServer4.Events
         /// The subject identifier.
         /// </value>
         public string SubjectId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the subject identifier.
+        /// </summary>
+        /// <value>
+        /// The subject identifier.
+        /// </value>
+        public string SubjectEmail { get; set; }
 
         /// <summary>
         /// Gets or sets the scopes.
